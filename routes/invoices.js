@@ -65,9 +65,9 @@ router.post('/', async(req, res, next) => {
 
 router.patch('/:id', async(req, res, next) => {
     try {
-        let { id } = req.params;
+        const { id } = req.params;
         const { amt } = req.body;
-        const results = await db.query('UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING comp_code, amt, paid, add_date, paid_date', [amt])
+        const results = await db.query('UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING comp_code, amt, paid, add_date, paid_date', [amt, id])
         if (results.rows.length === 0) {
             throw new ExpressError(`Can not find any invoices with id of ${id}`, 404)
         }
@@ -76,9 +76,6 @@ router.patch('/:id', async(req, res, next) => {
         return next(e)
     }
 })
-
-
-
 
 router.delete('/:id', async(req, res, next) => {
     try {
